@@ -37,6 +37,19 @@ public class UsersDAO {
 	    private Statement query;
 	    private String sql;
 		
+	    public String validaVersao(String versao) throws Exception{
+	    	
+	    	sql="select versao from t_versao_sts";
+	    	 query = (Statement) fv.getConexao().createStatement();
+	            ResultSet rs = query.executeQuery(sql);
+	            while (rs.next()) {
+	            	versao=rs.getString("versao");
+	            }
+	    	return versao;
+	    }
+	    
+	    
+	    
 		public ArrayList<Users> buscaUser(Users users) throws Exception {
 	 
 	        // Cria novo objeto

@@ -154,7 +154,7 @@ public class Main_principal {
 		jFrame.getContentPane().add(btnIniciar);
 		
 		
-		comboLocalidade.setBounds(127, 164, 124, 20);
+		comboLocalidade.setBounds(127, 164, 134, 20);
 		jFrame.getContentPane().add(comboLocalidade);
 		
 		JLabel label = new JLabel("Demanda");
@@ -163,7 +163,7 @@ public class Main_principal {
 		
 		txbDemanda = new JTextField();
 		txbDemanda.setColumns(10);
-		txbDemanda.setBounds(127, 133, 124, 20);
+		txbDemanda.setBounds(127, 133, 134, 20);
 		jFrame.getContentPane().add(txbDemanda);
 		
 		JLabel label_1 = new JLabel("Apontar Horas");
@@ -226,7 +226,7 @@ throw new Exception (e1.getMessage());
 			}
 		});
 		
-		btn_enviar_horas2.setBounds(137, 189, 118, 23);
+		btn_enviar_horas2.setBounds(137, 189, 124, 23);
 		jFrame.getContentPane().add(btn_enviar_horas2);
 		
 		JLabel label_3 = new JLabel("Localidade");
@@ -242,7 +242,7 @@ throw new Exception (e1.getMessage());
 				cop.frmSmartTimesheet.show();
 			}
 		});
-		btnHistricoDeApontamentos.setBounds(62, 223, 190, 23);
+		btnHistricoDeApontamentos.setBounds(62, 223, 199, 23);
 		jFrame.getContentPane().add(btnHistricoDeApontamentos);
 		
 		JLabel lblAtividade = new JLabel("Atividade");
@@ -256,7 +256,7 @@ throw new Exception (e1.getMessage());
 		
 		
 		
-		comboAtividade.setBounds(127, 108, 124, 20);
+		comboAtividade.setBounds(127, 108, 134, 20);
 		jFrame.getContentPane().add(comboAtividade);
 		comboTags.setBounds(127, 133, 124, 20);
 		jFrame.getContentPane().add(comboTags);
@@ -337,10 +337,12 @@ FacadeCrono fcn = new FacadeCrono();
 		for (int i = 0; i <al.size(); i++) {
 			
 			comboAtividade.addItem(al.get(i).getTag());
-	
+	if(al.get(i).getTag().equals("CHAMADO")){
+		comboAtividade.setSelectedIndex(i);
+	}
 		}
 		arrAtiv=al;
-		comboAtividade.setSelectedIndex(4);
+		
 //		comboLocalidade.setModel(model);
 		//comboLocalidade.setSelectedIndex(0);
 	//JOptionPane.showMessageDialog(null,comboLocalidade.getSelectedIndex());

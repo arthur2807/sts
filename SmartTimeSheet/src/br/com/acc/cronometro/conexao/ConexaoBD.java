@@ -35,7 +35,7 @@ public class ConexaoBD {
 	private static Connection con; // Variável de conexão que passará a url de conexão
 
 	final String jdbcDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	final String databaseUrl = "jdbc:sqlserver://"+/*"10.2.119.206:1433"*/pegabanco()+";databaseName=controlehora";
+	final String databaseUrl = "jdbc:sqlserver://"+/*"10.2.119.206:1433"*/pegabanco()+";databaseName=controlehora_hml";
 	final String user = "controlh";
 	final String password = "nAtura00";
 /*

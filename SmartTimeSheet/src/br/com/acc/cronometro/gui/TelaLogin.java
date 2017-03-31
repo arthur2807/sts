@@ -31,6 +31,19 @@ public class TelaLogin {
 	private JTextField txblogin;
 	FacadeCrono facadeCrono = new FacadeCrono();
 	private JPasswordField txbSenha;
+	String versao= "1.6";
+	
+	private void validaVersaoSTS() {
+		// TODO Auto-generated method stub
+		if(versao != facadeCrono.validaVersao(versao));
+		{
+			JOptionPane.showMessageDialog(null,"Esta Versão do sistema está desatualizada!\n"
+					+ "Contate o Administrador do sistema. \n"
+					+ "arthur.v.camara@accenture.com","ERRO",JOptionPane.ERROR_MESSAGE);		
+			System.exit(0);
+		}
+		
+	}
 	
 
 	/**
@@ -59,6 +72,7 @@ public class TelaLogin {
 	 */
 	public TelaLogin(Users us2) {
 		initialize();
+		validaVersaoSTS();
 	}
 
 	public static void main(String[] args) {

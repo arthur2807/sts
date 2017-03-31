@@ -113,6 +113,9 @@ public ArrayList<Tag> listarTagsALL(){
 	return ativdao.buscaTodasTags();
 }
 	
-	
+	public String validaVersao(String versao){
+		
+		return versao;
+	}
 
 }
