@@ -193,7 +193,7 @@ public class Main_Acomp_horas {
 		        frame.setVisible(true);*/
 			}
 		});
-		btnBuscar.setBounds(260, 72, 89, 23);
+		btnBuscar.setBounds(260, 72, 76, 23);
 		panel.add(btnBuscar);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -228,9 +228,20 @@ public class Main_Acomp_horas {
 		labelTotal.setBounds(153, 295, 175, 14);
 		panel.add(labelTotal);
 		
+		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			//	int ghj=table.setValueAt(0, arg1, arg2);
+				//JOptionPane.showMessageDialog(null, );
+				
+			}
+		});
+		btnExcluir.setBounds(356, 72, 76, 23);
+		panel.add(btnExcluir);
+		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(Main_Acomp_horas.class.getResource("/img/background_2.jpg")));
-		lblNewLabel.setBounds(0, 0, 524, 315);
+		lblNewLabel.setBounds(0, 0, 524, 325);
 		panel.add(lblNewLabel);
 	}
 	

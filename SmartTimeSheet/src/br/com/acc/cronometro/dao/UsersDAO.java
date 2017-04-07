@@ -37,8 +37,8 @@ public class UsersDAO {
 	    private Statement query;
 	    private String sql;
 		
-	    public String validaVersao(String versao) throws Exception{
-	    	
+	    public String validaVersao() throws Exception{
+	    	String versao = null;
 	    	sql="select versao from t_versao_sts";
 	    	 query = (Statement) fv.getConexao().createStatement();
 	            ResultSet rs = query.executeQuery(sql);

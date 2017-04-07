@@ -31,11 +31,13 @@ public class TelaLogin {
 	private JTextField txblogin;
 	FacadeCrono facadeCrono = new FacadeCrono();
 	private JPasswordField txbSenha;
-	String versao= "1.6";
-	
-	private void validaVersaoSTS() {
+	String versao= "1.7";
+	String versaoVerify=null;
+	private void validaVersaoSTS() throws Exception {
 		// TODO Auto-generated method stub
-		if(versao != facadeCrono.validaVersao(versao));
+		versaoVerify=facadeCrono.validaVersao();
+		
+		if(!versao.equals(versaoVerify ))
 		{
 			JOptionPane.showMessageDialog(null,"Esta Versão do sistema está desatualizada!\n"
 					+ "Contate o Administrador do sistema. \n"
@@ -72,7 +74,12 @@ public class TelaLogin {
 	 */
 	public TelaLogin(Users us2) {
 		initialize();
-		validaVersaoSTS();
+		try {
+			validaVersaoSTS();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package br.com.acc.cronometro.conexao;
 
+import java.awt.Transparency;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,8 +12,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.EmptyStackException;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -24,18 +27,20 @@ import com.microsoft.sqlserver.jdbc.*;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class ConexaoBD {
+public class ConexaoBD  {
 
 	public ConexaoBD() {
+		System.out.println("nb1");
+		
 	}
 
 	// Cria string de conexão de banco de dados
 	private static String conexao;
-
 	private static Connection con; // Variável de conexão que passará a url de conexão
-
+private static String ipComplete="1";
 	final String jdbcDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	final String databaseUrl = "jdbc:sqlserver://"+/*"10.2.119.206:1433"*/pegabanco()+";databaseName=controlehora_hml";
+	
+	final String databaseUrl = "jdbc:sqlserver://"+/*"10.2.119.206:1433"*/ipComplete+";databaseName=controlehora_hml";
 	final String user = "controlh";
 	final String password = "nAtura00";
 /*
@@ -52,9 +57,10 @@ public class ConexaoBD {
 	public Connection getConexao() throws Exception {
 		// Class.forName(jdbcDriver);
 		//if (con == null) {
-			
+		pegabanco();
 			con=retConn();
 			return con;
+			
 	//}else{
 //	return con;	}
 	}
@@ -62,6 +68,7 @@ public class ConexaoBD {
 	public Connection retConn() throws Exception{
 		try {
 			System.out.println("Entrou no reConn o que nao pode");
+			
 			
 			con = DriverManager.getConnection(databaseUrl, user, password);
 			// con=
@@ -111,7 +118,7 @@ public class ConexaoBD {
 		}
 		return con;
 	} 
-	 private static String pegabanco() {
+	 private static String pegabanco() throws FileNotFoundException  {
 		 class ipb{
 			 String ip;
 		 }
@@ -120,8 +127,13 @@ public class ConexaoBD {
 				//carrega o arquivo XML para um objeto reader
 				reader = new FileReader("C:\\ControleHoras\\configserver.xml");
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+				/*
+ JOptionPane.showMessageDialog(null,"O arquivo configserver.xml não foi encontrado no caminnho:\n"
+		+ "C:\\ControleHoras\\configserver.xml\n"
+		+ "Favor colocar o arquivo no diretório!", "ERRO",JOptionPane.ERROR_MESSAGE)	;	*/
+				throw new FileNotFoundException("O arquivo configserver.xml não foi encontrado no caminnho:\n"
+						+ "C:\\ControleHoras\\configserver.xml\n"
+						+ "Favor colocar o arquivo no diretório!");}
 			//Cria o objeto xstream
 			XStream xStream = new XStream(new DomDriver());
 			//informamos as tags que serao lidas
