@@ -115,6 +115,7 @@ public ArrayList<Tag> listarTagsALL(){
 	
 	public String validaVersao() throws Exception{
 		return udd.validaVersao();
+		//TESTECOMMIT
 		
 	}
 
