@@ -210,7 +210,7 @@ public class Main_Acomp_horas {
 			new Object[][] {
 			},
 			new String[] {
-				"NOME", "DEMANDA", "TEMPO", "DT_ENVIO", "Localidade"
+				"NOME", "DEMANDA", "TEMPO", "DATA ENVIO", "LOCALIDADE"
 			}
 		));
 		
@@ -228,16 +228,20 @@ public class Main_Acomp_horas {
 		labelTotal.setBounds(153, 295, 175, 14);
 		panel.add(labelTotal);
 		
-		JButton btnExcluir = new JButton("Excluir");
-		btnExcluir.addActionListener(new ActionListener() {
+		JButton btnZerar = new JButton("Zerar");
+		btnZerar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			//	int ghj=table.setValueAt(0, arg1, arg2);
+				int rowSelect;
+				rowSelect = table.getSelectedRow();
+				JOptionPane.showMessageDialog(null,table.getValueAt(rowSelect, 0));
 				//JOptionPane.showMessageDialog(null, );
+				
 				
 			}
 		});
-		btnExcluir.setBounds(356, 72, 76, 23);
-		panel.add(btnExcluir);
+		btnZerar.setBounds(356, 72, 76, 23);
+		panel.add(btnZerar);
 		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(Main_Acomp_horas.class.getResource("/img/background_2.jpg")));
@@ -284,7 +288,7 @@ public class Main_Acomp_horas {
 		// TODO Auto-generated constructor stub]
 		
 		//crie um defaultablemodel com as informações acima
-		  String[] nomesColunas = {"NOME", "DEMANDA", "TEMPO","DT_ENVIO","LOCALIDADE"};
+		  String[] nomesColunas = {"NOME", "DEMANDA", "TEMPO","DATA ENVIO","LOCALIDADE"};
 			//essa lista terá as linhas da sua JTable, preenchi abaixo apenas como exemplo
 		DefaultTableModel modelt = new DefaultTableModel();
 		       modelt.setColumnIdentifiers(nomesColunas);

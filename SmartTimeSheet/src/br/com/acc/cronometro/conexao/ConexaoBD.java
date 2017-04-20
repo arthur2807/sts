@@ -40,7 +40,7 @@ public class ConexaoBD  {
 private static String ipComplete="1";
 	final String jdbcDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	
-	final String databaseUrl = "jdbc:sqlserver://"+/*"10.2.119.206:1433"*/ipComplete+";databaseName=controlehora_hml";
+	final String databaseUrl = "jdbc:sqlserver://"+"10.43.1.130:1433"+";databaseName=controlehora_hml";
 	final String user = "controlh";
 	final String password = "nAtura00";
 /*
@@ -139,10 +139,11 @@ private static String ipComplete="1";
 			//informamos as tags que serao lidas
 			xStream.alias("banco", ipb.class);// 1º tag
 			xStream.aliasField("ip", ipb.class, "ip");// tag filha
+			
 			//cria um objeto Banco,
 			//contendo os dados do xml
 			ipb banco =  (ipb) xStream.fromXML(reader);
-			//Exibimos no console o resultado
+			//Exibimos no console o resultado do ip
 			System.out.println(banco.ip);
 			return banco.ip;
 		}

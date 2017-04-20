@@ -203,11 +203,16 @@ public class Main_principal {
 					tempf=null;
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
+						if (!e1.getMessage().contains("sincronizar")){
 						 currentHora= currentHorabck;
 						 currentMinuto= currentMinutobck;
 						 currentSegundo= currentSegundobck;
 						 iniciarContagem();
-throw new Exception (e1.getMessage());					
+throw new Exception (e1.getMessage());	}else{
+	
+	
+	JOptionPane.showMessageDialog(null, e1.getMessage());
+}				
 
 					
 					}

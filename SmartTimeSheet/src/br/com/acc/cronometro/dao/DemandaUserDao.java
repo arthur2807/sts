@@ -2,14 +2,30 @@ package br.com.acc.cronometro.dao;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import br.com.acc.cronometro.classesBasicas.Demanda;
 import br.com.acc.cronometro.classesBasicas.Demanda_User;
@@ -24,7 +40,7 @@ public class DemandaUserDao {
 	private Statement query;
 	private String sql;
 	ConexaoBD fv = new ConexaoBD();
-
+	public static final String xmlFilePath = "C:\\ControleHoras\\ttxl.xml";
 	public DemandaUserDao() {
 
 		
@@ -365,10 +381,21 @@ ArrayList<Demanda_User> arrDemand = new ArrayList<>();
 			// Executa SQL
 			query.execute();
 			query.close();
-			
+		
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
+			try {
+				String pid=Integer.toString(du.getPid());
+				insereDemandaUserTemp(pid,dd.getCd_demanda(),dd.getTempo(),Integer.toString(dd.getLocalidade().getCd_localidade()));
+				
+				throw new Exception("ERRO AO ENVIAR HORAS PARA A BASE!\n As horas foram enviadas em modo offline!\n Não esqueca de sincronizar suas horas com a base!");
+		
+			} catch (Exception e2) {
+				// TODO: handle exception
+				
+						
+			}
 			String url_arq="C:\\ControleHoras\\log_erro.txt";
 		 	File arq1 = new File(url_arq);
 		 	
@@ -384,6 +411,7 @@ ArrayList<Demanda_User> arrDemand = new ArrayList<>();
 		 		arq.close();
 		 	
 			e.printStackTrace();
+			
 			throw new Exception("ERRO AO ENVIAR HORAS!\n Tente Novamente! E se necessário, \n Informe ao Admnistrador do sistema!\n" +e.getMessage());
 		}
 
@@ -430,4 +458,106 @@ ArrayList<Demanda_User> arrDemand = new ArrayList<>();
 	 * 
 	 * }
 	 */
+	private void insereDemandaUserTemp(String Ppid, String Pcd_demanda, String Ptempo, String Plocalidade) {
+		// TODO Auto-generated method stub
+		try {
+						
+	          DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	
+		          DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		
+		          Document document = documentBuilder.parse(xmlFilePath);
+	
+		//pegando o nó principal
+	          Node apontamentos = document.getElementsByTagName("apontamentos").item(0);
+	       // append a new node to the first employee
+	      	//cria o registro apontado
+	          Element apontamento = document.createElement("apontamento");
+		          //criando informacoes do registro apontado
+		          // setando PID
+	          Element pid = document.createElement("pid");
+		  		          pid.appendChild(document.createTextNode(Ppid));
+					          apontamento.appendChild(pid);
+					          
+					       // setando cd_demanda
+					          Element cd_demanda = document.createElement("cd_demanda");
+					          
+					          cd_demanda.appendChild(document.createTextNode(Pcd_demanda));
+					
+						          apontamento.appendChild(cd_demanda);
+					
+					       				          
+			// setando tempo
+			          Element tempo = document.createElement("tempo");
+			          
+			          tempo.appendChild(document.createTextNode(Ptempo));
+			
+				          apontamento.appendChild(tempo);
+			          
+			       // setando dt_envio
+			          Element dt_envio = document.createElement("dt_envio");
+			          
+			          //pegando data do sistema operacional
+					  Calendar hoje = Calendar.getInstance();
+					  String dStr = Year.now().toString()+"-"+//pega ano
+							  hoje.getTime().getMonth()+"-" // pega mes
+							 + hoje.getTime().getDate()+" " // pega data
+							  +hoje.getTime().getHours()+":" //pega horas
+							 +hoje.getTime().getMinutes()+":"+ //pega minutos
+							  hoje.getTime().getSeconds(); // pega segundos
+					  
+			          dt_envio.appendChild(document.createTextNode(dStr));
+			
+				          apontamento.appendChild(dt_envio);
+				          
+				          
+				          // setando localidade
+				          Element localidade = document.createElement("localidade");
+				          
+				          localidade.appendChild(document.createTextNode(Plocalidade));
+				
+					          apontamento.appendChild(localidade);
+		          
+		          
+				       // inserindo apontamento na lista de registros (<apontamentoS)
+				          apontamentos.appendChild(apontamento);
+
+		          // write the DOM object to the file
+		
+		          TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		
+		
+		
+		          Transformer transformer = transformerFactory.newTransformer();
+		
+		          DOMSource domSource = new DOMSource(document);
+		
+		
+		
+		          StreamResult streamResult = new StreamResult(new File(xmlFilePath));
+		
+		          transformer.transform(domSource, streamResult);
+	          System.out.println("Registro incluído no XML");
+	
+	
+	
+	      } catch (ParserConfigurationException pce) {
+	
+	          pce.printStackTrace();
+	
+	      } catch (TransformerException tfe) {
+	
+	          tfe.printStackTrace();
+	
+	      } catch (IOException ioe) {
+	
+	          ioe.printStackTrace();
+	
+	        } catch (SAXException sae) {
+	
+	            sae.printStackTrace();
+	
+	        }
+
+	}
 }

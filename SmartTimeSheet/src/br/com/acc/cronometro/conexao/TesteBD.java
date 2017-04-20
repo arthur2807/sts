@@ -15,8 +15,13 @@ import br.com.acc.cronometro.facade.FacadeCrono;
 
 public class TesteBD {
 public static void main(String[] args) {
-	//ConexaoBD bd ;
-	//bd.getConexao();
+	ConexaoBD bd = new ConexaoBD() ;
+	try {
+		bd.getConexao();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	Users ud = new Users();
 	ud.setEid("pedro.cordeiro@accenture.com");
 	ud.setNome("Pedro Cordeiro");
