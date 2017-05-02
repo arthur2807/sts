@@ -44,6 +44,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class Main_principal {
 	public static Users pUser2 = new Users();
@@ -60,6 +62,7 @@ public class Main_principal {
 	    JButton btn_enviar_horas2 = new JButton("Enviar Horas");
 	    JButton btnAdmLocalidade = new JButton("ADM Localidade");
 	    JButton btnAdmFuncionarios = new JButton("ADM Funcionarios");
+	    JButton btnSync = new JButton("");
 	    static Users checkUser;
 	static Users us = new Users();
 	public JFrame jFrame;
@@ -110,6 +113,7 @@ public class Main_principal {
 		iniciarContagem();
 		stopTime();
 		validaAtiv();
+		validaSyncOn();
 		jFrame.setTitle("Smart TimeSheet - Usuário Logado: "+ pUser2.getNome() +" - "+ pUser2.getEid());
 		
 	}
@@ -266,6 +270,25 @@ throw new Exception (e1.getMessage());	}else{
 		comboTags.setBounds(127, 133, 124, 20);
 		jFrame.getContentPane().add(comboTags);
 		
+		
+		btnSync.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					facadeCrono.syncHorasXml();
+				} catch (Exception e) {
+					// TODO: handle exception
+				JOptionPane.showMessageDialog(null, e.getMessage(), "ERRO",JOptionPane.ERROR);
+				}
+								
+			}
+		});
+		btnSync.setBackground(Color.RED);
+		btnSync.setToolTipText("Sincronizar Apontamentos com o servidor");
+		btnSync.setIcon(new ImageIcon("C:\\Users\\arthur.v.camara\\Desktop\\ic_update_black_24dp_1x.png"));
+		btnSync.setBounds(268, 189, 31, 23);
+		jFrame.getContentPane().add(btnSync);
+		
 		JLabel lblNewLabel_1 = new JLabel("New label");
 		lblNewLabel_1.setIcon(new ImageIcon(Main_principal.class.getResource("/img/background_2.jpg")));
 		lblNewLabel_1.setBounds(0, 1, 347, 301);
@@ -409,5 +432,19 @@ FacadeCrono fcn = new FacadeCrono();
 	        currentMinuto = 0;
 	        currentSegundo = 0;
 	        lblNewLabel.setText("00:00:00");
+	}
+	
+	private void validaSyncOn(){
+		
+		boolean result = false;
+		try {
+			result=facadeCrono.validaSync();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if 	(result==true){
+			btnSync.setVisible(true);
+		}else btnSync.setVisible(false);
 	}
 }

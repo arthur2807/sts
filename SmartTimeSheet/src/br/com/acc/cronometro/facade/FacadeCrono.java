@@ -115,8 +115,19 @@ public ArrayList<Tag> listarTagsALL(){
 	
 	public String validaVersao() throws Exception{
 		return udd.validaVersao();
-		//TESTECOMMIT
+		
 		
 	}
 
+	// método para validar se existem arquivos no xml pendentes de sincronização.
+	//caso retorne true o botão de sync é exibido
+	public boolean validaSync() throws Exception{
+		return dud.verificaApontamentosSync();
+		
+		
+	}
+	
+	public void syncHorasXml() {
+	dud.sincronizaApontamentosTempo();
+	}
 }

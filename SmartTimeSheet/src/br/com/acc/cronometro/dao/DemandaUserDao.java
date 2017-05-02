@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,8 @@ import java.sql.Statement;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +25,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -458,7 +463,7 @@ ArrayList<Demanda_User> arrDemand = new ArrayList<>();
 	 * 
 	 * }
 	 */
-	private void insereDemandaUserTemp(String Ppid, String Pcd_demanda, String Ptempo, String Plocalidade) {
+	public void insereDemandaUserTemp(String Ppid, String Pcd_demanda, String Ptempo, String Plocalidade) {
 		// TODO Auto-generated method stub
 		try {
 						
@@ -560,4 +565,193 @@ ArrayList<Demanda_User> arrDemand = new ArrayList<>();
 	        }
 
 	}
+
+	public void sincronizaApontamentosTempo(){
+		File f = new File("C:\\ControleHoras\\ttxl.xml");
+        
+		SAXBuilder builder = new SAXBuilder();
+		     
+		org.jdom2.Document doc = null;
+		
+			try {
+				doc =builder.build(f);
+			} catch (JDOMException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		             
+		org.jdom2.Element root = doc.getRootElement();
+		         
+		List pessoas = (List) root.getChildren();
+		             
+		Iterator i = pessoas.iterator();
+		             
+		while( i.hasNext() ){
+			
+			
+			
+			org.jdom2.Element pessoa = (org.jdom2.Element) i.next();
+			
+			Users u = new Users();
+			u.setPid(Integer.parseInt(((org.jdom2.Element) pessoa).getChildText("pid")));
+			Demanda du = new  Demanda ();
+			
+			du.setCd_demanda(((org.jdom2.Element) pessoa).getChildText("cd_demanda").toString());
+			du.setData(((org.jdom2.Element) pessoa).getChildText("dt_envio").toString());
+			du.setTempo(((org.jdom2.Element) pessoa).getChildText("tempo").toString());
+			Localidade l = new Localidade();
+			l.setCd_localidade(Integer.parseInt(((org.jdom2.Element) pessoa).getChildText("localidade")));
+			du.setLocalidade(l);
+			try {
+				this.insereDemandaUserTempBase(u, du);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		        System.out.println("PID: " + ((org.jdom2.Element) pessoa).getChildText("pid"));
+		        System.out.println("CD_DEMANDA: " + ((org.jdom2.Element) pessoa).getChildText("cd_demanda"));
+		        System.out.println("DT_ENVIO: " + ((org.jdom2.Element) pessoa).getChildText("dt_envio"));
+		        System.out.println("TEMPO: " + ((org.jdom2.Element) pessoa).getChildText("tempo"));
+		        System.out.println("LOCALIDADE: " + ((org.jdom2.Element) pessoa).getChildText("localidade"));
+		        System.out.println();
+		}
+		
+		
+	}
+	
+	//convert(smalldatetime,'2017-3-20 16:38:46')
+	
+
+	public void insereDemandaUserTempBase(Users du, Demanda dd) throws Exception {
+
+		// Define SQL
+		sql = "INSERT INTO T_DEMANDA_USER VALUES (?, ?,?,?,?)";
+
+		try {
+
+			// Prepara SQL e alimenta parametros
+			PreparedStatement query = fv.getConexao().prepareStatement(sql);
+			query.setLong(1, du.getPid());
+			query.setString(2, dd.getCd_demanda());
+			query.setString(3, dd.getTempo());
+			query.setString(4, dd.getData());
+			query.setInt(5, dd.getLocalidade().getCd_localidade());
+
+			// Executa SQL
+			query.execute();
+			query.close();
+		
+			//removendo os nós após lancar na base
+			File f = new File("C:\\ControleHoras\\ttxl.xml");
+	      
+			SAXBuilder builder = new SAXBuilder();
+			   
+			org.jdom2.Document doc = null;
+			org.jdom2.Element root2 = doc.getRootElement();
+	        List pessoas2 = (List) root2.getChildren();
+			         
+			Iterator i2 = pessoas2.iterator();
+			while( i2.hasNext() ){
+				
+				org.jdom2.Element pessoa = (org.jdom2.Element) i2.next();
+				root2.removeContent(pessoa);
+						
+			}
+
+		} catch (Exception e) {
+			
+			try {
+				String pid=Integer.toString(du.getPid());
+				//insereDemandaUserTemp(pid,dd.getCd_demanda(),dd.getTempo(),Integer.toString(dd.getLocalidade().getCd_localidade()));
+				
+				throw new Exception("ERRO AO ENVIAR HORAS PARA A BASE!\n As horas foram enviadas em modo offline!\n Não esqueca de sincronizar suas horas com a base!");
+		
+			} catch (Exception e2) {
+				// TODO: handle exception
+				
+						
+			}
+			String url_arq="C:\\ControleHoras\\log_erro.txt";
+		 	File arq1 = new File(url_arq);
+		 	
+		 	  FileWriter arq = new FileWriter("C:\\ControleHoras\\log_erro.txt");
+			    PrintWriter gravarArq = new PrintWriter(arq);
+			    Calendar data ; 
+			    String gd=Calendar.getInstance().toString();
+			    			
+			    gravarArq.printf(gd+"ERRO = "+ e.getMessage());
+			    gravarArq.printf("+-------------+%n");
+			 
+			    
+		 		arq.close();
+		 	
+			e.printStackTrace();
+			
+			throw new Exception("ERRO AO ENVIAR HORAS!\n Tente Novamente! E se necessário, \n Informe ao Admnistrador do sistema!\n" +e.getMessage());
+		}
+
+	}
+
+
+	public boolean verificaApontamentosSync(){
+		File f = new File("C:\\ControleHoras\\ttxl.xml");
+        
+		SAXBuilder builder = new SAXBuilder();
+		     
+		org.jdom2.Document doc = null;
+		
+			try {
+				doc =builder.build(f);
+			} catch (JDOMException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		             
+		org.jdom2.Element root = doc.getRootElement();
+		         
+		List pessoas = (List) root.getChildren();
+		             int contReg=0;
+		Iterator i = pessoas.iterator();
+		             
+		while( i.hasNext() ){
+					
+			org.jdom2.Element pessoa = (org.jdom2.Element) i.next();
+			Users u = new Users();
+			u.setPid(Integer.parseInt(((org.jdom2.Element) pessoa).getChildText("pid")));
+			Demanda du = new  Demanda ();
+			du.setCd_demanda(((org.jdom2.Element) pessoa).getChildText("cd_demanda").toString());
+			du.setData(((org.jdom2.Element) pessoa).getChildText("dt_envio").toString());
+			du.setTempo(((org.jdom2.Element) pessoa).getChildText("tempo").toString());
+			Localidade l = new Localidade();
+			l.setCd_localidade(Integer.parseInt(((org.jdom2.Element) pessoa).getChildText("localidade")));
+			du.setLocalidade(l);
+			contReg++;
+					
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		if (contReg>0){
+			System.out.println("foi true");
+			return true;
+			
+		}else
+			System.out.println("foi false");
+			return false;
+	}
+	
 }
